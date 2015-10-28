@@ -125,8 +125,14 @@ static BOOL doFreeze = NO;
 }
 
 - (id) p_swizzledInit {
+    
     if( [NSDate doFaking] ){
-        return [[NSDate alloc]  p_swizzledInitWithTimeIntervalSinceNow:-fakeDiff];
+        if ( doFreeze ){
+            NSTimeInterval interval = fakedNow.timeIntervalSince1970;
+            return [[NSDate alloc] initWithTimeIntervalSince1970:interval];
+        } else {
+            return [[NSDate alloc] p_swizzledInitWithTimeIntervalSinceNow:-fakeDiff];
+        }
     }
     return [self p_swizzledInit];
 }
